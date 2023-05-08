@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:example_ecopetro/pages/shared/shared.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:intl/intl.dart';
 
 class TrucksScreen extends StatelessWidget {
   const TrucksScreen({super.key});
@@ -9,54 +10,50 @@ class TrucksScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final scaffoldKey = GlobalKey<ScaffoldState>();
 
-    final data = [
-      Expenses(0, 100.000),
-      Expenses(1, 200.000),
-      Expenses(2, 250.000),
-      Expenses(3, 100.000),
-    ];
-
-    List<charts.Series<Expenses, int>> series = [
-      charts.Series<Expenses, int>(
-        id: 'Gastos',
-        data: data,
-        domainFn: (v, i) => v.day,
-        measureFn: (v, i) => v.expense,
-      )
-    ];
-
     return Scaffold(
       drawer: SideMenu(scaffoldKey: scaffoldKey),
       appBar: AppBar(
-        title: const Text('Camiones'),
+        title: const Text('Dashboard'),
         actions: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.search_rounded))
         ],
       ),
-      body: Center(
-        child: SizedBox(
-          height: 350.0,
-          child: charts.LineChart(series, animate: true),
-        ),
-      ),
+      body: _TrucksView(),
     );
   }
 }
 
-// class _TrucksView extends StatelessWidget {
-//   const _TrucksView();
+class _TrucksView extends StatelessWidget {
+  final List<ChartData> chartData = [
+    ChartData('Semana 1', 1000, 1500),
+    ChartData('Semana 2', 2000, 1500),
+    ChartData('Semana 3', 5000, 1500),
+    ChartData('Semana 4', 8000, 1500),
+  ];
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Center(
-//       child: SizedBox(height: 350.0, child: charts.LineChart(series)),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: SfCartesianChart(
+      primaryXAxis: CategoryAxis(),
+      primaryYAxis: NumericAxis(edgeLabelPlacement: EdgeLabelPlacement.shift),
+      series: <ChartSeries>[
+        StackedColumnSeries<ChartData, String>(
+            dataSource: chartData,
+            xValueMapper: (ChartData ch, _) => ch.x,
+            yValueMapper: (ChartData ch, _) => ch.y1),
+        StackedColumnSeries<ChartData, String>(
+            dataSource: chartData,
+            xValueMapper: (ChartData ch, _) => ch.x,
+            yValueMapper: (ChartData ch, _) => ch.y2),
+      ],
+    ));
+  }
+}
 
-class Expenses {
-  final int day;
-  final double expense;
-
-  Expenses(this.day, this.expense);
+class ChartData {
+  final String x;
+  final int y1;
+  final int y2;
+  ChartData(this.x, this.y1, this.y2);
 }
