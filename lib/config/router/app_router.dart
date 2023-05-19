@@ -1,9 +1,9 @@
 import 'package:go_router/go_router.dart';
 import 'package:example_ecopetro/pages/auth/auth.dart';
-import 'package:example_ecopetro/pages/trucks/trucks.dart';
+import 'package:example_ecopetro/pages/stadistic/stadistic.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/users',
   routes: [
     ///* Auth Routes
     GoRoute(
@@ -11,10 +11,22 @@ final appRouter = GoRouter(
       builder: (context, state) => const LoginScreen(),
     ),
 
-    ///* Trucks Routes
+    // ///* Trucks Routes
+    // GoRoute(
+    //   path: '/',
+    //   builder: (context, state) => const ImagesVerify(),
+    // ),
+
+    ///* DashBoard Routes
     GoRoute(
-      path: '/',
-      builder: (context, state) => const TrucksScreen(),
+      path: '/dashboard',
+      builder: (context, state) => const StadisticScreen(),
     ),
+
+    // ///* Users Routes
+    // GoRoute(
+    //   path: '/users',
+    //   builder: (context, state) => const ListUsers(),
+    // ),
   ],
 );

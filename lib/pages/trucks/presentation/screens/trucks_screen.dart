@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:example_ecopetro/pages/shared/shared.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:intl/intl.dart';
+import 'dart:io';
+import '../../../shared/widgets/side_menu.dart';
+import 'package:image_picker/image_picker.dart';
 
-class TrucksScreen extends StatelessWidget {
-  const TrucksScreen({super.key});
+class ImagesVerify extends StatefulWidget {
+  const ImagesVerify({super.key});
+
+  @override
+  State<ImagesVerify> createState() => _ImagesVerifyState();
+}
+
+class _ImagesVerifyState extends State<ImagesVerify> {
+  late File file;
+  final picker = ImagePicker();
+
+  List<File> images = [];
 
   @override
   Widget build(BuildContext context) {
@@ -13,47 +23,74 @@ class TrucksScreen extends StatelessWidget {
     return Scaffold(
       drawer: SideMenu(scaffoldKey: scaffoldKey),
       appBar: AppBar(
-        title: const Text('Dashboard'),
+        title: const Text('Trucks'),
         actions: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.search_rounded))
         ],
       ),
-      body: _TrucksView(),
+      body: GridView.builder(
+        itemCount: images.length + 1,
+        padding: const EdgeInsets.all(15),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.6,
+          mainAxisSpacing: 15,
+          crossAxisSpacing: 15,
+        ),
+        itemBuilder: (context, index) {
+          return index == images.length
+              ? images.length == 3
+                  ? const SizedBox.shrink()
+                  : GestureDetector(
+                      onTap: addImage,
+                      child: Card(
+                        child: Center(
+                          child: CircleAvatar(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            child: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+              : Card(
+                  child: Image.file(
+                    images[index],
+                    fit: BoxFit.cover,
+                  ),
+                );
+        },
+      ),
     );
   }
-}
 
-class _TrucksView extends StatelessWidget {
-  final List<ChartData> chartData = [
-    ChartData('Semana 1', 1000, 1500),
-    ChartData('Semana 2', 2000, 1500),
-    ChartData('Semana 3', 5000, 1500),
-    ChartData('Semana 4', 8000, 1500),
-  ];
+  Future<void> addImage() async {
+    if (images.length == 3) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Ya tiene el total de imagenes requeridas'),
+              ],
+            ),
+          );
+        },
+      );
+    } else {
+      final imagePicker = await picker.pickImage(source: ImageSource.camera);
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-        child: SfCartesianChart(
-      primaryXAxis: CategoryAxis(),
-      primaryYAxis: NumericAxis(edgeLabelPlacement: EdgeLabelPlacement.shift),
-      series: <ChartSeries>[
-        StackedColumnSeries<ChartData, String>(
-            dataSource: chartData,
-            xValueMapper: (ChartData ch, _) => ch.x,
-            yValueMapper: (ChartData ch, _) => ch.y1),
-        StackedColumnSeries<ChartData, String>(
-            dataSource: chartData,
-            xValueMapper: (ChartData ch, _) => ch.x,
-            yValueMapper: (ChartData ch, _) => ch.y2),
-      ],
-    ));
+      if (imagePicker == null) {
+      } else {
+        file = File(imagePicker.path);
+        setState(() {
+          images.add(file);
+        });
+      }
+    }
   }
-}
-
-class ChartData {
-  final String x;
-  final int y1;
-  final int y2;
-  ChartData(this.x, this.y1, this.y2);
 }
