@@ -18,6 +18,7 @@ class _SideMenuState extends State<SideMenu> {
   final List<Widget> _destinationWidgets = [
     const StadisticScreen(),
     const ListUsers(),
+    const RegisterScreen(),
   ];
 
   void _onDestinationSelected(int index) {
@@ -52,12 +53,16 @@ class _SideMenuState extends State<SideMenu> {
           child: Text('Test User'),
         ),
         const NavigationDrawerDestination(
-          icon: Icon(Icons.home_outlined),
+          icon: Icon(Icons.home),
           label: Text('Dashboard'),
         ),
         const NavigationDrawerDestination(
           icon: Icon(Icons.place),
-          label: Text('Mis viajes'),
+          label: Text('Mis usuarios'),
+        ),
+        const NavigationDrawerDestination(
+          icon: Icon(Icons.person_add),
+          label: Text('Registrar chofer'),
         ),
         const Padding(
           padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
