@@ -1,33 +1,20 @@
+import 'package:example_ecopetro/features/trucks/presentation/screens/register_guias_screen.dart';
 import 'package:go_router/go_router.dart';
-import 'package:example_ecopetro/pages/auth/auth.dart';
-import 'package:example_ecopetro/pages/stadistic/stadistic.dart';
-import '../../pages/trucks/presentation/screens/screens.dart';
+import 'package:example_ecopetro/features/auth/auth.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/users',
+  initialLocation: '/new-lt',
   routes: [
     ///* Auth Routes
     GoRoute(
-      path: '/login',
+      path: '/',
       builder: (context, state) => const LoginScreen(),
     ),
 
     ///* Trucks Routes
     GoRoute(
-      path: '/',
-      builder: (context, state) => const ImagesVerify(),
-    ),
-
-    ///* DashBoard Routes
-    GoRoute(
-      path: '/dashboard',
-      builder: (context, state) => const StadisticScreen(),
-    ),
-
-    ///* Users Routes
-    GoRoute(
-      path: '/users',
-      builder: (context, state) => const ListUsers(),
+      path: '/new-lt',
+      builder: (context, state) => const RegisterScreen(),
     ),
   ],
 );
