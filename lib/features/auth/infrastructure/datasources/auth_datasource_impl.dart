@@ -1,15 +1,14 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:dio/dio.dart';
 import 'package:example_ecopetro/config/config.dart';
 import 'package:example_ecopetro/features/auth/domain/domain.dart';
-
-import '../infrastructure.dart';
+import 'package:example_ecopetro/features/auth/infrastructure/infrastructure.dart';
 
 class AuthDataSourceImpl extends AuthDataSource {
   final dio = Dio(
     BaseOptions(
       baseUrl: Environment.backend,
-      // contentType: 'application/json',
-      // responseType: ResponseType.json,
     ),
   );
 
@@ -31,8 +30,17 @@ class AuthDataSourceImpl extends AuthDataSource {
       );
       final user = UserMapper.userJsonToEntity(response.data);
       return user;
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw CustomError(
+            e.response?.data['message'] ?? 'Credenciales incorrectas');
+      }
+      if (e.type == DioErrorType.connectionTimeout) {
+        throw CustomError('Revisar conexion a internet');
+      }
+      throw Exception();
     } catch (e) {
-      throw WrongCredentials();
+      throw Exception();
     }
   }
 }

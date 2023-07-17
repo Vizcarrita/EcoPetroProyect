@@ -1,3 +1,4 @@
+import 'package:example_ecopetro/features/auth/presentation/providers/auth_provider.dart';
 import 'package:example_ecopetro/features/auth/presentation/providers/login_form_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:example_ecopetro/features/shared/shared.dart';
@@ -49,9 +50,20 @@ class LoginScreen extends StatelessWidget {
 class _LoginForm extends ConsumerWidget {
   const _LoginForm();
 
+  void showSnackbar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final loginForm = ref.watch(loginFormProvider);
+
+    ref.listen(authProvider, (previous, next) {
+      if (next.errorMessage.isEmpty) return;
+      showSnackbar(context, next.errorMessage);
+    });
 
     final textStyles = Theme.of(context).textTheme;
 

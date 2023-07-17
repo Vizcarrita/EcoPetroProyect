@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:example_ecopetro/features/auth/auth.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/new-lt',
+  initialLocation: '/',
   routes: [
     ///* Auth Routes
     GoRoute(
